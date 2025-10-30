@@ -879,6 +879,7 @@ export default function Checkout() {
                         <Image
                           src={item.image}
                           alt={item.name}
+                          fill
                           className="w-16 h-16 rounded-lg object-cover"
                         />
                       ) : (

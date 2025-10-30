@@ -72,6 +72,7 @@ const CartItem = ({
         <Image
           src={product.image}
           alt={product.name}
+          fill
           className="w-24 h-24 sm:w-20 sm:h-20 object-cover rounded-lg mx-auto sm:mx-0"
         />
       ) : (

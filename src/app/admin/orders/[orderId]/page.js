@@ -138,6 +138,7 @@ export default function OrderDetailsPage() {
                           <Image
                             src={item.image}
                             alt={item.name}
+                            fill
                             className="w-16 h-16 rounded-lg object-cover"
                           />
                         ) : (

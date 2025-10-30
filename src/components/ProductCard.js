@@ -71,6 +71,7 @@ const ProductCard = ({ product, viewMode, index }) => {
           <Image
             src={product.image}
             alt={product.name}
+            fill
             className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (

@@ -183,6 +183,7 @@ export default function Home() {
                           <Image
                             src={item.image}
                             alt={item.name}
+                            fill
                             className="absolute top-0 left-0 w-full h-full w-16 h-16 object-cover transition-transform duration-300 hover:scale-105"
                           />
 
@@ -301,6 +302,7 @@ export default function Home() {
                     <Image
                       src={product.image}
                       alt={product.name}
+                      fill
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                   ) : (

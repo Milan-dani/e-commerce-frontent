@@ -42,6 +42,7 @@ function ProductImageZoom({ src }) {
       <Image
         src={src}
         alt="Product"
+        fill
         className="w-full h-full object-cover rounded-lg cursor-zoom-in"
         onMouseEnter={() => setZoom(true)}
         onMouseLeave={() => setZoom(false)}
@@ -546,6 +547,7 @@ export default function ProductPage() {
                   <Image
                     src={p.image}
                     alt={p.name}
+                    fill
                     className="w-full h-32 object-cover"
                   />
                   <div className="p-2">

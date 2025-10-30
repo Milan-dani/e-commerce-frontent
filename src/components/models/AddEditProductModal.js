@@ -348,6 +348,7 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                     {form.image ? (
                       <Image
                         src={form.image}
+                        fill
                         alt="Preview"
                         className="w-32 h-32 object-cover mx-auto rounded-lg"
                       />
