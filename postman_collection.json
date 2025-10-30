@@ -1,0 +1,268 @@
+{
+  "info": {
+    "name": "Ecommerce Microservices",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "b5a6c3c4-1234-4a6a-bbbb-000000000001"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/auth/signup", "host": ["{{baseUrl}}"], "path": ["auth", "signup"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"alice\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"Passw0rd!\",\n  \"role\": \"customer\"\n}" }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"alice\",\n  \"password\": \"Passw0rd!\"\n}" }
+          }
+        },
+        {
+          "name": "Validate",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "url": { "raw": "{{baseUrl}}/auth/validate", "host": ["{{baseUrl}}"], "path": ["auth", "validate"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/products/products", "host": ["{{baseUrl}}"], "path": ["products", "products"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"T-Shirt\",\n  \"price\": 19.99,\n  \"description\": \"Soft cotton tee\",\n  \"stock\": 150,\n  \"category\": \"apparel\"\n}" }
+          }
+        },
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/products/products?search=shirt&category=apparel", "host": ["{{baseUrl}}"], "path": ["products", "products"], "query": [ {"key": "search", "value": "shirt"}, {"key": "category", "value": "apparel"} ] }
+          }
+        },
+        {
+          "name": "Get Product",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/products/products/:id", "host": ["{{baseUrl}}"], "path": ["products", "products", ":id"] }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/products/products/:id", "host": ["{{baseUrl}}"], "path": ["products", "products", ":id"] },
+            "body": { "mode": "raw", "raw": "{\n  \"price\": 17.99,\n  \"stock\": 200\n}" }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/products/products/:id", "host": ["{{baseUrl}}"], "path": ["products", "products", ":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Add to Cart",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/cart/cart/:userId/add", "host": ["{{baseUrl}}"], "path": ["cart", "cart", ":userId", "add"] },
+            "body": { "mode": "raw", "raw": "{\n  \"productId\": \"65f1c3...\",\n  \"quantity\": 2\n}" }
+          }
+        },
+        {
+          "name": "Remove from Cart",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/cart/cart/:userId/remove", "host": ["{{baseUrl}}"], "path": ["cart", "cart", ":userId", "remove"] },
+            "body": { "mode": "raw", "raw": "{\n  \"productId\": \"65f1c3...\"\n}" }
+          }
+        },
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "url": { "raw": "{{baseUrl}}/cart/cart/:userId", "host": ["{{baseUrl}}"], "path": ["cart", "cart", ":userId"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/orders/orders", "host": ["{{baseUrl}}"], "path": ["orders", "orders"] },
+            "body": { "mode": "raw", "raw": "{\n  \"userId\": \"u_123\",\n  \"items\": [\n    { \"productId\": \"65f1c3...\", \"quantity\": 1 },\n    { \"productId\": \"65f1d4...\", \"quantity\": 3 }\n  ]\n}" }
+          }
+        },
+        {
+          "name": "Get Orders for User",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "url": { "raw": "{{baseUrl}}/orders/orders/:userId", "host": ["{{baseUrl}}"], "path": ["orders", "orders", ":userId"] }
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/orders/orders/:id/status", "host": ["{{baseUrl}}"], "path": ["orders", "orders", ":id", "status"] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"Shipped\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Process Payment",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/payments/payments/process", "host": ["{{baseUrl}}"], "path": ["payments", "payments", "process"] },
+            "body": { "mode": "raw", "raw": "{\n  \"orderId\": \"ord_123\",\n  \"amount\": 59.97\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inventory",
+      "item": [
+        {
+          "name": "Update Stock",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/inventory/inventory/update", "host": ["{{baseUrl}}"], "path": ["inventory", "inventory", "update"] },
+            "body": { "mode": "raw", "raw": "{\n  \"productId\": \"65f1c3...\",\n  \"quantity\": 1\n}" }
+          }
+        },
+        {
+          "name": "Get Inventory",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "url": { "raw": "{{baseUrl}}/inventory/inventory/:productId", "host": ["{{baseUrl}}"], "path": ["inventory", "inventory", ":productId"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recommendations",
+      "item": [
+        {
+          "name": "Get Recommendations",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/recommendations/recommendations", "host": ["{{baseUrl}}"], "path": ["recommendations", "recommendations"] },
+            "body": { "mode": "raw", "raw": "{\n  \"productId\": \"65f1c3...\",\n  \"context\": \"similar to summer tees\"\n}" }
+          }
+        },
+        {
+          "name": "Generate Description",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/recommendations/generate-description", "host": ["{{baseUrl}}"], "path": ["recommendations", "generate-description"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Eco Water Bottle\",\n  \"category\": \"outdoors\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Ingest Event",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/analytics/events", "host": ["{{baseUrl}}"], "path": ["analytics", "events"] },
+            "body": { "mode": "raw", "raw": "{\n  \"type\": \"order.created\",\n  \"payload\": { \"orderId\": \"ord_123\", \"userId\": \"u_123\" }\n}" }
+          }
+        },
+        {
+          "name": "Get Metrics",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "url": { "raw": "{{baseUrl}}/analytics/metrics", "host": ["{{baseUrl}}"], "path": ["analytics", "metrics"] }
+          }
+        },
+        {
+          "name": "Get Events",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "url": { "raw": "{{baseUrl}}/analytics/events", "host": ["{{baseUrl}}"], "path": ["analytics", "events"] }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const existingToken = pm.environment.get('token');",
+          "if (!existingToken) {",
+          "  const username = pm.environment.get('username');",
+          "  const password = pm.environment.get('password');",
+          "  const baseUrl = pm.environment.get('baseUrl') || pm.variables.get('baseUrl');",
+          "  if (username && password && baseUrl) {",
+          "    pm.sendRequest({",
+          "      url: baseUrl + '/auth/login',",
+          "      method: 'POST',",
+          "      header: { 'Content-Type': 'application/json' },",
+          "      body: { mode: 'raw', raw: JSON.stringify({ username, password }) }",
+          "    }, function (err, res) {",
+          "      if (!err) {",
+          "        try {",
+          "          const data = res.json();",
+          "          if (data && data.token) { pm.environment.set('token', data.token); }",
+          "        } catch (e) { /* ignore */ }",
+          "      }",
+          "    });",
+          "  }",
+          "}"
+        ]
+      }
+    }
+  ]
+}
+
+

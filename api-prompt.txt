@@ -1,0 +1,205 @@
+@postman_collection.json You are an expert Next.js + Redux Toolkit (RTK) engineer.
+
+You are given a Postman collection JSON file that defines backend API endpoints.
+
+Your task:
+👉 Parse the Postman collection and automatically generate a complete, production-grade
+state and API management layer for a Next.js (JavaScript) project using Redux Toolkit and RTK Query.
+
+---
+
+### 🧱 Project Context
+- The project uses **Next.js** with plain **JavaScript (no TypeScript)**.
+- The backend is a **Node.js / Express API**, accessed via REST endpoints.
+- All code should be generated under the `/src/` directory.
+
+---
+
+## ⚙️ Architecture Overview
+
+Generate the following file structure and contents:
+src/
+api/
+baseApi.js
+services/
+<domain>Api.js
+store/
+index.js
+slices/
+<featureSlice>.js
+
+---
+
+## 🔧 Implementation Rules
+
+### 1️⃣ Base API Configuration
+**File:** `/src/api/baseApi.js`
+
+- Use `createApi` and `fetchBaseQuery` from `@reduxjs/toolkit/query/react`.
+- Base URL: `process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'`
+- Automatically attach a JWT token from `localStorage` (if it exists) to the `Authorization` header.
+- Set `Content-Type` to `application/json`.
+- Define common `tagTypes` like `Users`, `Products`, `Orders`, etc. (based on Postman folders).
+- Export the `baseApi` instance.
+
+Example:
+```js
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+const baseApi = createApi({
+  reducerPath: 'api',
+  baseQuery: fetchBaseQuery({
+    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem('token');
+      if (token) headers.set('Authorization', `Bearer ${token}`);
+      headers.set('Content-Type', 'application/json');
+      return headers;
+    },
+  }),
+  tagTypes: ['Users', 'Products', 'Orders'],
+  endpoints: () => ({}),
+});
+
+export default baseApi;
+
+2️⃣ API Services (per domain)
+
+Folder: /src/api/services/
+
+For each folder or group in the Postman collection (e.g. “Users”, “Products”, “Orders”):
+
+Create a corresponding file like /src/api/services/userApi.js.
+
+Extend the base API using baseApi.injectEndpoints.
+
+For each request in the Postman group, generate a proper RTK Query endpoint (query or mutation).
+
+Name endpoints following CRUD conventions (e.g. getUsers, createUser, updateUser).
+
+Include appropriate providesTags and invalidatesTags for cache handling.
+
+Example:
+// src/api/services/userApi.js
+import baseApi from '../baseApi';
+
+export const userApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    getUsers: builder.query({
+      query: () => '/users',
+      providesTags: ['Users'],
+    }),
+    getUserById: builder.query({
+      query: (id) => `/users/${id}`,
+      providesTags: ['Users'],
+    }),
+    createUser: builder.mutation({
+      query: (body) => ({
+        url: '/users',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Users'],
+    }),
+  }),
+});
+
+export const {
+  useGetUsersQuery,
+  useGetUserByIdQuery,
+  useCreateUserMutation,
+} = userApi;
+3️⃣ Redux Store Configuration
+
+File: /src/store/index.js
+
+Configure Redux store with:
+
+baseApi.reducer under api
+
+All generated slices from /src/store/slices
+
+Apply middleware from baseApi.middleware
+
+Call setupListeners(store.dispatch)
+
+Example:
+import { configureStore } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import baseApi from '../api/baseApi';
+import authReducer from './slices/authSlice';
+import uiReducer from './slices/uiSlice';
+
+const store = configureStore({
+  reducer: {
+    [baseApi.reducerPath]: baseApi.reducer,
+    auth: authReducer,
+    ui: uiReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(baseApi.middleware),
+});
+
+setupListeners(store.dispatch);
+
+export default store;
+
+4️⃣ Slice Generation (per domain or feature)
+
+Folder: /src/store/slices/
+
+For each logical feature or Postman folder (e.g., “Auth”, “Cart”, “UI”), create a Redux slice file:
+
+Name: <feature>Slice.js
+
+Include initial state, reducers, and actions
+
+For example:
+
+authSlice.js → manages user data and token
+
+uiSlice.js → handles modals, theme, loading state
+
+cartSlice.js → manages cart items
+
+Example:
+import { createSlice } from '@reduxjs/toolkit';
+
+const authSlice = createSlice({
+  name: 'auth',
+  initialState: { user: null },
+  reducers: {
+    setUser: (state, action) => { state.user = action.payload; },
+    logout: (state) => {
+      state.user = null;
+      localStorage.removeItem('token');
+    },
+  },
+});
+
+export const { setUser, logout } = authSlice.actions;
+export default authSlice.reducer;
+
+6️⃣ Optional Enhancements
+
+Auto-generate React hooks for each endpoint (RTK Query does this by default).
+
+Add automatic cache invalidation with providesTags and invalidatesTags.
+
+Generate one Redux slice per logical group in the Postman collection.
+🧩 Input
+
+Postman collection JSON file (e.g. postman_collection.json)
+
+🎯 Output
+
+Generate:
+
+src/api/baseApi.js
+
+src/api/services/<domain>Api.js for each group in Postman
+
+src/store/slices/<feature>Slice.js for each feature
+
+src/store/index.js with everything wired up
+Now, read the Postman collection and generate all Redux Toolkit + RTK Query API and slice files accordingly.Please
