@@ -185,7 +185,9 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-400 text-gray-900 placeholder-gray-400"
                       placeholder="Enter product name"
                     />
-                  {errors.name && <p className="text-red-400">{errors.name}</p>}
+                    {errors.name && (
+                      <p className="text-red-400">{errors.name}</p>
+                    )}
                   </div>
 
                   <div>
@@ -206,8 +208,9 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                           </option>
                         ))}
                     </select>
-                  {errors.category && <p className="text-red-400">{errors.category}</p>}
-
+                    {errors.category && (
+                      <p className="text-red-400">{errors.category}</p>
+                    )}
                   </div>
                 </div>
 
@@ -226,8 +229,9 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-400"
                     placeholder="Enter product description"
                   />
-                  {errors.description && <p className="text-red-400">{errors.description}</p>}
-
+                  {errors.description && (
+                    <p className="text-red-400">{errors.description}</p>
+                  )}
                 </div>
 
                 {/* Price, Original Price, Stock */}
@@ -244,8 +248,9 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-400"
                     />
-                  {errors.price && <p className="text-red-400">{errors.price}</p>}
-
+                    {errors.price && (
+                      <p className="text-red-400">{errors.price}</p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -260,8 +265,9 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                       }
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-400"
                     />
-                  {errors.originalPrice && <p className="text-red-400">{errors.originalPrice}</p>}
-
+                    {errors.originalPrice && (
+                      <p className="text-red-400">{errors.originalPrice}</p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -274,8 +280,9 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-400"
                     />
-                  {errors.stock && <p className="text-red-400">{errors.stock}</p>}
-
+                    {errors.stock && (
+                      <p className="text-red-400">{errors.stock}</p>
+                    )}
                   </div>
                 </div>
 
@@ -294,8 +301,9 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                       <option value="active">Active</option>
                       <option value="inactive">Inactive</option>
                     </select>
-                  {errors.status && <p className="text-red-400">{errors.status}</p>}
-
+                    {errors.status && (
+                      <p className="text-red-400">{errors.status}</p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -312,8 +320,9 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                     <span className="ml-2 text-sm text-gray-700">
                       New Product
                     </span>
-                  {errors.isNewProduct && <p className="text-red-400">{errors.isNewProduct}</p>}
-
+                    {errors.isNewProduct && (
+                      <p className="text-red-400">{errors.isNewProduct}</p>
+                    )}
                   </div>
                 </div>
 
@@ -346,12 +355,16 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                     className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors"
                   >
                     {form.image ? (
-                      <Image
-                        src={form.image}
-                        fill
-                        alt="Preview"
-                        className="w-32 h-32 object-cover mx-auto rounded-lg"
-                      />
+                      <div className="flex justify-center">
+                        <Image
+                          src={form.image}
+                          alt="Preview"
+                          width={128} // equals w-32
+                          height={128} // equals h-32
+                          className="object-cover rounded-lg"
+                          unoptimized
+                        />
+                      </div>
                     ) : (
                       <>
                         <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
@@ -360,6 +373,7 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                         </p>
                       </>
                     )}
+
                     <input
                       id="product-image-input"
                       type="file"
@@ -385,8 +399,9 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                       Remove Image
                     </button>
                   )}
-                  {errors.image && <p className="text-red-400">{errors.image}</p>}
-
+                  {errors.image && (
+                    <p className="text-red-400">{errors.image}</p>
+                  )}
                 </div>
 
                 {/* Buttons */}

@@ -747,19 +747,21 @@ export default function Checkout() {
               <div className="space-y-4 mb-6">
                 {items.map((item) => (
                   <div key={item.productId} className="flex items-center gap-3">
-                    <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                      {/* <CreditCard className="w-6 h-6 text-gray-400" /> */}
+                    <div className="relative w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
                       {item?.image ? (
                         <Image
                           src={item.image}
                           alt={item.name}
                           fill
-                          className="w-16 h-16 rounded-lg object-cover"
+                          className="object-cover rounded-lg"
+                          sizes="64px"
+                          unoptimized
                         />
                       ) : (
                         <CreditCard className="w-8 h-8 text-gray-400" />
                       )}
                     </div>
+
                     <div className="flex-1">
                       <h3 className="font-medium text-gray-900">{item.name}</h3>
                       <p className="text-sm text-gray-600">

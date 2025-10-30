@@ -26,7 +26,7 @@ const CheckoutButton = ({ cartItems, shippingFee }) => {
       console.log("✅ Order created:", order);
       toast.success("Order placed successfully!");
       // ✅ redirect to checkout page (e.g. /checkout/[orderId])
-      if (order.id) {
+      if (order.id) {        
         router.push(`/checkout/${order.id}`);
       }
     } catch (err) {

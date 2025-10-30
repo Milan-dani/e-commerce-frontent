@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -41,14 +41,23 @@ const CartItem = ({
   const [quantity, setQuantity] = useState(item.quantity);
 
   useEffect(() => setQuantity(item.quantity), [item.quantity]);
+  // const handleChange = (e) => {
+  //   const value = parseInt(e.target.value);
+  //   if (!isNaN(value) && value > 0) {
+  //     setQuantity(value);
+  //     onQuantityChange(item.productId, value);
+  //   }
+  // };
   const handleChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (!isNaN(value) && value > 0) {
-      setQuantity(value);
-      onQuantityChange(item.productId, value);
-    }
+    let value = parseInt(e.target.value);
+    if (isNaN(value) || value < 1) value = 1;
+    if (value > product.stock) value = product.stock;
+    setQuantity(value);
+    onQuantityChange(item.productId, value);
   };
+
   useEffect(() => {
+    if (!product) return;
     if (product) onProductLoaded(item.productId, product);
   }, [product, item.productId, onProductLoaded]);
 
@@ -69,12 +78,16 @@ const CartItem = ({
     >
       {/* Image */}
       {product?.image ? (
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          className="w-24 h-24 sm:w-20 sm:h-20 object-cover rounded-lg mx-auto sm:mx-0"
-        />
+        <div className="relative w-24 h-24 sm:w-20 sm:h-20 mx-auto sm:mx-0">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover rounded-lg"
+            sizes="(max-width: 640px) 96px, 80px"
+            unoptimized
+          />
+        </div>
       ) : (
         <div className="w-24 h-24 sm:w-20 sm:h-20 bg-gray-200 rounded-lg flex items-center justify-center mx-auto sm:mx-0">
           <ShoppingBag className="w-8 h-8 text-gray-400" />
@@ -197,9 +210,18 @@ export default function Cart() {
   const [subTotal, setSubTotal] = React.useState(0);
 
   // Called by each CartItem when its product data loads
-  const handleProductLoaded = (productId, productData) => {
-    setProductsMap((prev) => ({ ...prev, [productId]: productData }));
-  };
+  // const handleProductLoaded = (productId, productData) => {
+  //   setProductsMap((prev) => ({ ...prev, [productId]: productData }));
+  // };
+  //   const handleProductLoaded = useCallback((productId, productData) => {
+  //   setProductsMap((prev) => ({ ...prev, [productId]: productData }));
+  // }, []);
+  const handleProductLoaded = useCallback((productId, productData) => {
+    setProductsMap((prev) => {
+      if (prev[productId]) return prev; // prevent unnecessary update
+      return { ...prev, [productId]: productData };
+    });
+  }, []);
 
   // Recalculate subtotal whenever cart or productsMap changes
   React.useEffect(() => {
@@ -267,7 +289,7 @@ export default function Cart() {
               : "No cart items found"}
           </p>
         </motion.div>
-       
+
         {isLoading ? (
           // Show skeleton loader while cart is loading
           [1, 2, 3, 4].map((index) => (

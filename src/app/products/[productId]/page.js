@@ -41,26 +41,28 @@ function ProductImageZoom({ src }) {
       {/* Main Image */}
       <Image
         src={src}
-        alt="Product"
+        alt="Product image"
         fill
-        className="w-full h-full object-cover rounded-lg cursor-zoom-in"
+        className="object-cover rounded-lg cursor-zoom-in"
         onMouseEnter={() => setZoom(true)}
         onMouseLeave={() => setZoom(false)}
         onMouseMove={handleMouseMove}
+        sizes="(max-width: 1024px) 100vw, 50vw"
+        unoptimized
       />
 
       {/* Zoomed Image */}
       {zoom && (
         <div
-          //   className="absolute top-0 left-full z-50 w-80 h-80 ml-4 bg-no-repeat rounded-lg border border-gray-300"
-          className="absolute top-0 left-full z-50 w-120 h-120 bg-no-repeat rounded-lg border border-gray-300"
+          className="absolute top-0 left-full z-50 w-[30rem] h-[30rem] bg-no-repeat rounded-lg border border-gray-300"
           style={{
             backgroundImage: `url(${src})`,
             backgroundSize: "200%",
             backgroundPosition: backgroundPos,
           }}
-        ></div>
+        />
       )}
+
       {/* Fullscreen Zoom Overlay
       {zoom && (
         <div
@@ -156,15 +158,10 @@ export default function ProductPage() {
               t.visible ? "animate-enter" : "animate-leave"
             } flex items-center`}
           >
-              <span>
-                Failed to create order
-              </span>
-              <Button
-                onClick={() => toast.dismiss(t.id)}
-                className="ml-4"
-              >
-                Dismissc
-              </Button>
+            <span>Failed to create order</span>
+            <Button onClick={() => toast.dismiss(t.id)} className="ml-4">
+              Dismissc
+            </Button>
           </div>
         ),
         { duration: Infinity }
@@ -544,12 +541,17 @@ export default function ProductPage() {
                   href={`/products/${p._id}`}
                   className="flex-shrink-0 w-48 bg-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow snap-start"
                 >
-                  <Image
-                    src={p.image}
-                    alt={p.name}
-                    fill
-                    className="w-full h-32 object-cover"
-                  />
+                  <div className="relative w-full h-32">
+                    <Image
+                      src={p.image}
+                      alt={p.name}
+                      fill
+                      className="object-cover"
+                      sizes="192px"
+                      unoptimized
+                    />
+                  </div>
+
                   <div className="p-2">
                     <h3 className="text-sm font-medium text-gray-900">
                       {p.name}

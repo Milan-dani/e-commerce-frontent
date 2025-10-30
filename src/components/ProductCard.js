@@ -64,7 +64,7 @@ const ProductCard = ({ product, viewMode, index }) => {
         } bg-gray-200 relative overflow-hidden rounded-lg`}
       >
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 opacity-20"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 opacity-20" />
 
         {/* Product Image or Fallback */}
         {product?.image ? (
@@ -72,7 +72,9 @@ const ProductCard = ({ product, viewMode, index }) => {
             src={product.image}
             alt={product.name}
             fill
-            className="absolute inset-0 w-full h-full object-cover"
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 25vw"
+            unoptimized
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-200">

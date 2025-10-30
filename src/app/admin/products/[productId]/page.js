@@ -35,46 +35,31 @@ function ProductImageZoom({ src }) {
   };
 
   return (
-    <div className="relative w-full lg:w-1/2 h-80 bg-gray-100 rounded-lg flex">
+    <div className="relative w-full lg:w-1/2 h-80 bg-gray-100 rounded-lg overflow-hidden">
       {/* Main Image */}
       <Image
         src={src}
-        alt="Product"
+        alt="Product image"
         fill
-        className="w-full h-full object-cover rounded-lg cursor-zoom-in"
+        className="object-cover rounded-lg cursor-zoom-in"
         onMouseEnter={() => setZoom(true)}
         onMouseLeave={() => setZoom(false)}
         onMouseMove={handleMouseMove}
+        sizes="(max-width: 1024px) 100vw, 50vw"
+        unoptimized
       />
 
       {/* Zoomed Image */}
       {zoom && (
         <div
-          //   className="absolute top-0 left-full z-50 w-80 h-80 ml-4 bg-no-repeat rounded-lg border border-gray-300"
-          className="absolute top-0 left-full z-50 w-120 h-120 bg-no-repeat rounded-lg border border-gray-300"
+          className="absolute top-0 left-full z-50 w-[30rem] h-[30rem] bg-no-repeat rounded-lg border border-gray-300"
           style={{
             backgroundImage: `url(${src})`,
             backgroundSize: "200%",
             backgroundPosition: backgroundPos,
           }}
-        ></div>
+        />
       )}
-      {/* Fullscreen Zoom Overlay
-      {zoom && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 cursor-zoom-out"
-          onMouseLeave={() => setZoom(false)}
-        >
-          <div
-            className="w-3/4 h-3/4 bg-no-repeat bg-contain bg-center rounded-lg shadow-lg"
-            style={{
-              backgroundImage: `url(${src})`,
-              backgroundSize: "200%",
-              backgroundPosition: backgroundPos,
-            }}
-          ></div>
-        </div>
-      )} */}
     </div>
   );
 }
@@ -87,7 +72,7 @@ export default function ProductPage() {
     data: relatedProducts,
     isLoading: isLoadingRelatedProduct,
     isError: isErrorInRelatedProduct,
-  } = useListProductsQuery({category : product?.category}); // Related products API
+  } = useListProductsQuery({ category: product?.category }); // Related products API
   // const {
   //   data: cart,
   //   isLoading: loadingCart,
@@ -103,7 +88,8 @@ export default function ProductPage() {
   const shipping = subTotal > 50 ? 0 : 9.99;
   const tax = subTotal * 0.08;
   const total = subTotal + shipping + tax;
-
+  // analytics might come from props, state, or API
+  const analytics = {} || null;
   useEffect(() => {
     if (!productId) {
       router.push("/admin/products");
@@ -129,7 +115,6 @@ export default function ProductPage() {
   };
   const handleCheckout = async () => {
     try {
-
       const order = await createOrder({
         items: [
           {
@@ -137,7 +122,7 @@ export default function ProductPage() {
             quantity,
           },
         ],
-        shippingFee : shipping,
+        shippingFee: shipping,
       }).unwrap();
 
       console.log("✅ Order created:", order);
@@ -172,7 +157,6 @@ export default function ProductPage() {
         ),
         { duration: Infinity }
       );
-
 
       //   toast.error("Failed to create order");
     }
@@ -443,8 +427,8 @@ export default function ProductPage() {
     //           <p className="text-gray-700">
     //             Price:{" "}
     //             <span className="font-bold text-gray-900">
-    //               ${product.price.toFixed(2)} 
-    //             </span> 
+    //               ${product.price.toFixed(2)}
+    //             </span>
     //             <span className="text-sm text-gray-600"> &nbsp; x{quantity}</span>
     //           </p>
     //           {product.originalPrice &&
@@ -555,164 +539,208 @@ export default function ProductPage() {
     // </div>
 
     <div className="min-h-screen bg-gray-50">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    {/* Header */}
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="mb-8"
-    >
-      <div className="flex items-center gap-4 mb-6">
-        <Link href="/admin/products">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-8"
+        >
+          <div className="flex items-center gap-4 mb-6">
+            <Link href="/admin/products">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Back to Products
+              </motion.button>
+            </Link>
+          </div>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Section */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Product Image & Info */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-lg shadow-sm p-6 flex flex-col lg:flex-row gap-6"
+            >
+              {/* Product Image
+              <div className="flex-shrink-0 w-full lg:w-1/2 h-80 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div> */}
+              {/* Product Image */}
+              <div className="flex-shrink-0 w-full lg:w-1/2 h-80 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden relative">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  width={500}
+                  height={500}
+                  className="object-cover w-full h-full rounded-lg"
+                  unoptimized
+                />
+              </div>
+
+              {/* Product Info & Editable Fields */}
+              <div className="flex-1 flex flex-col justify-between space-y-4">
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">
+                      Product Name
+                    </label>
+                    <input
+                      type="text"
+                      value={product.name}
+                      onChange={(e) =>
+                        setProduct({ ...product, name: e.target.value })
+                      }
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">
+                      Category
+                    </label>
+                    <input
+                      type="text"
+                      value={product.category}
+                      onChange={(e) =>
+                        setProduct({ ...product, category: e.target.value })
+                      }
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900"
+                    />
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">
+                        Price
+                      </label>
+                      <input
+                        type="number"
+                        value={product.price}
+                        onChange={(e) =>
+                          setProduct({
+                            ...product,
+                            price: parseFloat(e.target.value),
+                          })
+                        }
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">
+                        Stock
+                      </label>
+                      <input
+                        type="number"
+                        value={product.stock}
+                        onChange={(e) =>
+                          setProduct({
+                            ...product,
+                            stock: parseInt(e.target.value),
+                          })
+                        }
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">
+                      Description
+                    </label>
+                    <textarea
+                      value={product.description}
+                      onChange={(e) =>
+                        setProduct({ ...product, description: e.target.value })
+                      }
+                      rows={4}
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900"
+                    />
+                  </div>
+                </div>
+
+                {/* Admin Action Buttons */}
+                <div className="flex gap-4 mt-4">
+                  <Button
+                    variant="primary"
+                    // onClick={handleSaveChanges}
+                    // isLoading={isSaving}
+                  >
+                    Save Changes
+                  </Button>
+                  <Button
+                    variant="danger-outline"
+                    // onClick={handleDeleteProduct}
+                  >
+                    Delete Product
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Analytics / Stats (optional) */}
+            {analytics ? (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-lg shadow-sm p-6"
+              >
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  Product Analytics
+                </h2>
+                <p className="text-gray-700">
+                  Total Sales: {analytics.totalSales ?? 0}
+                </p>
+                <p className="text-gray-700">
+                  Units Sold: {analytics.unitsSold ?? 0}
+                </p>
+                <p className="text-gray-700">Views: {analytics.views ?? 0}</p>
+              </motion.div>
+            ) : (
+              <p className="text-gray-500">Analytics not available yet</p>
+            )}
+          </div>
+
+          {/* Sidebar: Quick Actions */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="lg:col-span-1 bg-white rounded-lg shadow-sm p-6 sticky top-8 space-y-6"
           >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Products
-          </motion.button>
-        </Link>
+            <h3 className="text-xl font-semibold text-gray-900">
+              Quick Actions
+            </h3>
+            <Button
+              className="w-full"
+              variant="primary-outline"
+              // onClick={handleDuplicateProduct}
+            >
+              Duplicate Product
+            </Button>
+            <Button
+              className="w-full"
+              variant="secondary"
+              // onClick={handleViewOrders}
+            >
+              View Orders
+            </Button>
+          </motion.div>
+        </div>
       </div>
-    </motion.div>
-
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Main Section */}
-      <div className="lg:col-span-2 space-y-6">
-        {/* Product Image & Info */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-lg shadow-sm p-6 flex flex-col lg:flex-row gap-6"
-        >
-          {/* Product Image */}
-          <div className="flex-shrink-0 w-full lg:w-1/2 h-80 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="w-full h-full object-cover rounded-lg"
-            />
-          </div>
-
-          {/* Product Info & Editable Fields */}
-          <div className="flex-1 flex flex-col justify-between space-y-4">
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-gray-700">
-                  Product Name
-                </label>
-                <input
-                  type="text"
-                  value={product.name}
-                  onChange={(e) => setProduct({...product, name: e.target.value})}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700">
-                  Category
-                </label>
-                <input
-                  type="text"
-                  value={product.category}
-                  onChange={(e) => setProduct({...product, category: e.target.value})}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                />
-              </div>
-
-              <div className="flex gap-4">
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Price</label>
-                  <input
-                    type="number"
-                    value={product.price}
-                    onChange={(e) => setProduct({...product, price: parseFloat(e.target.value)})}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Stock</label>
-                  <input
-                    type="number"
-                    value={product.stock}
-                    onChange={(e) => setProduct({...product, stock: parseInt(e.target.value)})}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700">Description</label>
-                <textarea
-                  value={product.description}
-                  onChange={(e) => setProduct({...product, description: e.target.value})}
-                  rows={4}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                />
-              </div>
-            </div>
-
-            {/* Admin Action Buttons */}
-            <div className="flex gap-4 mt-4">
-              <Button
-                variant="primary"
-                // onClick={handleSaveChanges}
-                // isLoading={isSaving}
-              >
-                Save Changes
-              </Button>
-              <Button
-                variant="danger-outline"
-                // onClick={handleDeleteProduct}
-              >
-                Delete Product
-              </Button>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Analytics / Stats (optional) */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-lg shadow-sm p-6"
-        >
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Product Analytics</h2>
-          <p className="text-gray-700">Total Sales: {analytics.totalSales}</p>
-          <p className="text-gray-700">Units Sold: {analytics.unitsSold}</p>
-          <p className="text-gray-700">Views: {analytics.views}</p>
-        </motion.div>
-      </div>
-
-      {/* Sidebar: Quick Actions */}
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="lg:col-span-1 bg-white rounded-lg shadow-sm p-6 sticky top-8 space-y-6"
-      >
-        <h3 className="text-xl font-semibold text-gray-900">Quick Actions</h3>
-        <Button
-          className="w-full"
-          variant="primary-outline"
-          // onClick={handleDuplicateProduct}
-        >
-          Duplicate Product
-        </Button>
-        <Button
-          className="w-full"
-          variant="secondary"
-          // onClick={handleViewOrders}
-        >
-          View Orders
-        </Button>
-      </motion.div>
     </div>
-  </div>
-</div>
-
   );
 }

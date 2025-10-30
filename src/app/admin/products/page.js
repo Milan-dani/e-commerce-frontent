@@ -432,12 +432,10 @@ export default function AdminProducts() {
                     <div className="relative w-full h-full">
                       <Image
                         src={product.image}
-                        // src={'https://picsum.photos/200'}
-                        // src={'https://via.placeholder.com/400x400?text=Product+Image'}
-                        // src={'https://source.unsplash.com/400x400/?product'}
                         alt={product.name ?? "Product image"}
                         fill
-                        className="object-contain"
+                        // className="object-contain"
+                        className="object-cover"
                         sizes="100vw"
                         unoptimized
                       />

@@ -65,14 +65,17 @@ export default function ProductPage() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-white rounded-lg shadow-sm p-6 flex flex-col lg:flex-row gap-6"
             >
-              <div className="flex-shrink-0 w-full lg:w-1/2 h-64 lg:h-80 bg-gray-100 rounded-lg flex items-center justify-center">
+              <div className="flex-shrink-0 w-full lg:w-1/2 h-64 lg:h-80 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
                 <Image
                   src={product.image}
                   alt={product.name}
-                  fill
-                  className="w-full h-full object-cover rounded-lg"
+                  width={600}
+                  height={600}
+                  className="object-cover w-full h-full rounded-lg"
+                  unoptimized
                 />
               </div>
+
               <div className="flex-1 space-y-4">
                 <p className="text-gray-900 font-semibold text-xl">
                   ${product.price.toFixed(2)}{" "}
@@ -87,9 +90,13 @@ export default function ProductPage() {
                   Category: {product.category}
                 </p>
                 <p className="text-sm text-gray-500">
-                  {product.inStock ? `In Stock (${product.stock})` : "Out of Stock"}
+                  {product.inStock
+                    ? `In Stock (${product.stock})`
+                    : "Out of Stock"}
                 </p>
-                <p className="text-sm text-gray-500">Rating: {product.rating} ⭐ ({product.reviews} reviews)</p>
+                <p className="text-sm text-gray-500">
+                  Rating: {product.rating} ⭐ ({product.reviews} reviews)
+                </p>
               </div>
             </motion.div>
           </div>
@@ -105,18 +112,25 @@ export default function ProductPage() {
             <div className="space-y-3">
               <div className="flex justify-between">
                 <span className="text-gray-600">Price</span>
-                <span className="font-semibold text-gray-900">${product.price.toFixed(2)}</span>
+                <span className="font-semibold text-gray-900">
+                  ${product.price.toFixed(2)}
+                </span>
               </div>
-              {product.originalPrice && product.originalPrice > product.price && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Original Price</span>
-                  <span className="font-semibold text-gray-900 line-through">
-                    ${product.originalPrice.toFixed(2)}
-                  </span>
-                </div>
-              )}
+              {product.originalPrice &&
+                product.originalPrice > product.price && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Original Price</span>
+                    <span className="font-semibold text-gray-900 line-through">
+                      ${product.originalPrice.toFixed(2)}
+                    </span>
+                  </div>
+                )}
               <div className="border-t pt-3">
-                <p className={`font-bold ${product.inStock ? "text-gray-900" : "text-red-900"}`}>
+                <p
+                  className={`font-bold ${
+                    product.inStock ? "text-gray-900" : "text-red-900"
+                  }`}
+                >
                   {product.inStock ? "Available" : "Out of Stock"}
                 </p>
               </div>

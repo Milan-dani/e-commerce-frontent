@@ -18,7 +18,10 @@ import {
   LucideCreditCard,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useGetOrderQuery, useLazyDownloadInvoiceQuery } from "@/api/services/orderApi";
+import {
+  useGetOrderQuery,
+  useLazyDownloadInvoiceQuery,
+} from "@/api/services/orderApi";
 import { getStatusColor, getStatusIcon } from "@/utils/statusHelpers";
 import Button from "@/components/Button";
 import toast from "react-hot-toast";
@@ -31,7 +34,8 @@ export default function OrderDetailsPage() {
   const { orderId } = useParams();
   const router = useRouter();
   const { data: order, isLoading } = useGetOrderQuery(orderId);
-    const [triggerDownload , {isLoading: isLoadingDownload}] = useLazyDownloadInvoiceQuery();
+  const [triggerDownload, { isLoading: isLoadingDownload }] =
+    useLazyDownloadInvoiceQuery();
 
   useEffect(() => {
     if (!orderId) {
@@ -45,8 +49,6 @@ export default function OrderDetailsPage() {
       toast.success("Order details loaded successfully.");
     }
   }, [order]);
-
-
 
   const handleDownload = async () => {
     const blob = await triggerDownload(orderId).unwrap();
@@ -75,7 +77,6 @@ export default function OrderDetailsPage() {
 
   return (
     <>
-
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
@@ -143,18 +144,21 @@ export default function OrderDetailsPage() {
                 <div className="space-y-3">
                   {order.items.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-3">
-                      <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                        {item.image ? (
+                      <div className="relative w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
+                        {item?.image ? (
                           <Image
                             src={item.image}
                             alt={item.name}
                             fill
-                            className="w-16 h-16 rounded-lg object-cover"
+                            className="object-cover rounded-lg"
+                            sizes="64px"
+                            unoptimized
                           />
                         ) : (
                           <CreditCard className="w-8 h-8 text-gray-400" />
                         )}
                       </div>
+
                       <div className="flex-1">
                         <h4 className="text-sm font-medium text-gray-900">
                           {item.name}
@@ -270,8 +274,14 @@ export default function OrderDetailsPage() {
                   Track Package
                 </Button>
               )}
-              {(order.status === "paid" ||  order.status === "fulfilled" )&& (
-                <Button className="w-full" icon={Download} variant="ghost-outline" isLoading={isLoadingDownload} onClick={handleDownload}>
+              {(order.status === "paid" || order.status === "fulfilled") && (
+                <Button
+                  className="w-full"
+                  icon={Download}
+                  variant="ghost-outline"
+                  isLoading={isLoadingDownload}
+                  onClick={handleDownload}
+                >
                   Download Invoice
                 </Button>
               )}

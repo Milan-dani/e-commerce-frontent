@@ -133,13 +133,13 @@ export default function OrderDetailsPage() {
                 <div className="space-y-3">
                   {order.items.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-3">
-                      <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                      <div className="relative w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
                         {item.image ? (
                           <Image
                             src={item.image}
                             alt={item.name}
                             fill
-                            className="w-16 h-16 rounded-lg object-cover"
+                            className="rounded-lg object-cover"
                           />
                         ) : (
                           <CreditCard className="w-8 h-8 text-gray-400" />
