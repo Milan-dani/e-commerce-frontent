@@ -5,6 +5,7 @@ import { Heart, ShoppingBag, ShoppingCart, Star } from "lucide-react";
 import { useAddToCartMutation, useGetCartQuery } from "@/api/services/cartApi";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import Image from "next/image";
 
 const ProductCard = ({ product, viewMode, index }) => {
   // const {
@@ -67,7 +68,7 @@ const ProductCard = ({ product, viewMode, index }) => {
 
         {/* Product Image or Fallback */}
         {product?.image ? (
-          <img
+          <Image
             src={product.image}
             alt={product.name}
             className="absolute inset-0 w-full h-full object-cover"

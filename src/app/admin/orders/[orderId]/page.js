@@ -29,6 +29,7 @@ import { getStatusColor, getStatusIcon } from "@/utils/statusHelpers";
 import Button from "@/components/Button";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function OrderDetailsPage() {
   const { orderId } = useParams();
@@ -42,7 +43,7 @@ export default function OrderDetailsPage() {
       router.push("/admin/dashboard");
       toast.error("No order found. Please Select any Order.");
     } // else remain on the page to complete checkout
-  }, [orderId]);
+  }, [orderId, router]);
 
   useEffect(() => {
     if (order) {
@@ -134,7 +135,7 @@ export default function OrderDetailsPage() {
                     <div key={idx} className="flex items-center gap-3">
                       <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
                         {item.image ? (
-                          <img
+                          <Image
                             src={item.image}
                             alt={item.name}
                             className="w-16 h-16 rounded-lg object-cover"

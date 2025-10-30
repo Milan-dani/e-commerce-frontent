@@ -9,6 +9,7 @@ import {
 import { toast } from "react-hot-toast";
 import Button from "../Button";
 import { validateAddEditProductForm } from "@/utils/formValidation";
+import Image from "next/image";
 
 const AddEditProductModal = ({ open, onClose, editingProduct }) => {
   const { data: categories = [], isLoading: loadingCategories } =
@@ -345,7 +346,7 @@ const AddEditProductModal = ({ open, onClose, editingProduct }) => {
                     className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors"
                   >
                     {form.image ? (
-                      <img
+                      <Image
                         src={form.image}
                         alt="Preview"
                         className="w-32 h-32 object-cover mx-auto rounded-lg"

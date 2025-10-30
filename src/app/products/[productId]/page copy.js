@@ -8,6 +8,7 @@ import Button from "@/components/Button";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { useGetProductQuery } from "@/api/services/productsApi";
+import Image from "next/image";
 
 export default function ProductPage() {
   const { productId } = useParams();
@@ -19,7 +20,7 @@ export default function ProductPage() {
       router.push("/products");
       toast.error("No product selected.");
     }
-  }, [productId]);
+  }, [productId, router]);
 
   useEffect(() => {
     if (product) {
@@ -65,7 +66,7 @@ export default function ProductPage() {
               className="bg-white rounded-lg shadow-sm p-6 flex flex-col lg:flex-row gap-6"
             >
               <div className="flex-shrink-0 w-full lg:w-1/2 h-64 lg:h-80 bg-gray-100 rounded-lg flex items-center justify-center">
-                <img
+                <Image
                   src={product.image}
                   alt={product.name}
                   className="w-full h-full object-cover rounded-lg"

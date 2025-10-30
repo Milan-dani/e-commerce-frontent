@@ -15,6 +15,7 @@ import { useListProductsQuery } from "@/api/services/productsApi";
 import Button from "@/components/Button";
 import FeaturedProductCard from "@/components/FeaturedProductCard";
 import { FeaturedProductCardSkeleton } from "@/components/SkeletonLoaders";
+import Image from "next/image";
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -179,7 +180,7 @@ export default function Home() {
                         {/* Square Image Container */}
                         <div className="w-full pt-[100%] relative overflow-hidden rounded-lg">
                           {/* Image */}
-                          <img
+                          <Image
                             src={item.image}
                             alt={item.name}
                             className="absolute top-0 left-0 w-full h-full w-16 h-16 object-cover transition-transform duration-300 hover:scale-105"
@@ -297,7 +298,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 opacity-20"></div>
                   {/* Product Image or Fallback */}
                   {product?.image ? (
-                    <img
+                    <Image
                       src={product.image}
                       alt={product.name}
                       className="absolute inset-0 w-full h-full object-cover"

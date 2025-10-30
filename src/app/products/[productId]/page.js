@@ -23,6 +23,7 @@ import { useAddToCartMutation, useGetCartQuery } from "@/api/services/cartApi";
 import { useCreateCheckoutSessionMutation } from "@/api/services/orderApi";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { ResourceNotFound } from "@/components/ResourceNotFound";
+import Image from "next/image";
 
 function ProductImageZoom({ src }) {
   const [zoom, setZoom] = useState(false);
@@ -38,7 +39,7 @@ function ProductImageZoom({ src }) {
   return (
     <div className="relative w-full lg:w-1/2 h-80 bg-gray-100 rounded-lg flex">
       {/* Main Image */}
-      <img
+      <Image
         src={src}
         alt="Product"
         className="w-full h-full object-cover rounded-lg cursor-zoom-in"
@@ -109,7 +110,7 @@ export default function ProductPage() {
       router.push("/products");
       toast.error("No product selected.");
     }
-  }, [productId]);
+  }, [productId, router]);
 
   useEffect(() => {
     if (product) toast.success("Product loaded successfully.");
@@ -542,7 +543,7 @@ export default function ProductPage() {
                   href={`/products/${p._id}`}
                   className="flex-shrink-0 w-48 bg-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow snap-start"
                 >
-                  <img
+                  <Image
                     src={p.image}
                     alt={p.name}
                     className="w-full h-32 object-cover"

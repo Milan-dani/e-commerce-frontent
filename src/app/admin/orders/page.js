@@ -13,6 +13,14 @@ export default function AdminOrders() {
     updateStatus({ orderId, status });
   };
 
+
+  // ✅ Add a loading and error-safe fallback
+  if (!orders) {
+    return <div>Loading orders...</div>;
+  }
+
+  const orderList = orders?.orders ?? [];
+
   return (
     <div>
       <h2>Admin Orders</h2>

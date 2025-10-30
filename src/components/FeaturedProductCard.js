@@ -6,6 +6,7 @@ import { useAddToCartMutation, useGetCartQuery } from "@/api/services/cartApi";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const FeaturedProductCard = ({ product,  index }) => {
   const router = useRouter();
@@ -48,7 +49,7 @@ const FeaturedProductCard = ({ product,  index }) => {
       <div className="aspect-square bg-gray-200 relative">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 opacity-20"></div>
         {product?.image ? (
-          <img
+          <Image
             src={product.image}
             alt={product.name}
             className="absolute inset-0 w-full h-full object-cover"

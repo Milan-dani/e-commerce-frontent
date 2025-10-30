@@ -66,7 +66,7 @@ export default function Dashboard() {
 
   const [activeTab, setActiveTab] = useState("overview");
 
-  const user_Old = {
+  const defaultUser = {
     name: "John Doe",
     email: "john.doe@example.com",
     memberSince: "January 2024",
@@ -76,7 +76,7 @@ export default function Dashboard() {
 
 
   const userFromCookies = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
-  const user = userFromCookies || { ...user_Old };
+  const user = userFromCookies || { ...defaultUser };
   console.log(user);
   
 
@@ -183,7 +183,9 @@ export default function Dashboard() {
                       .split(" ")
                       .map((n) => n[0])
                       .join("")} */}
-                      {user.firstName[0].toUpperCase()}{user.lastName[0].toUpperCase()}
+                      {/* {user.firstName[0].toUpperCase()}{user.lastName[0].toUpperCase()} */}
+                      {`${user?.firstName?.[0]?.toUpperCase() ?? ""}${user?.lastName?.[0]?.toUpperCase() ?? ""}`}
+
                   </span>
                 </div>
                 <div>
@@ -351,7 +353,7 @@ export default function Dashboard() {
 
                   {/* Orders List */}
                   <div className="space-y-4">
-                    {orders.slice(0, 3).map((order, index) => (
+                    {orders?.slice(0, 3)?.map((order, index) => (
                       <motion.div
                         key={order.id}
                         initial={{ opacity: 0, x: -20 }}
@@ -371,7 +373,7 @@ export default function Dashboard() {
                                 {order.orderNumber}
                               </h3>
                               <p className="text-sm text-gray-600">
-                                {order.createdAt.split("T")[0]}
+                                {order?.createdAt?.split("T")?.[0] ?? "Unknown date"}
                               </p>
                             </div>
                           </div>
@@ -426,7 +428,7 @@ export default function Dashboard() {
                                 {order.orderNumber}
                               </h3>
                               <p className="text-sm text-gray-600">
-                                {order.createdAt.split("T")[0]}
+                                {order?.createdAt?.split("T")?.[0] ?? "Unknown date"}
                               </p>
                             </div>
                           </div>

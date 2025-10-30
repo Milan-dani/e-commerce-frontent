@@ -37,8 +37,8 @@ export default function AdminDashboard() {
   const router = useRouter();  
   // const { tab } = router.query; // get query param
   const [activeTab, setActiveTab] = useState("overview");
-const validTabs = ["overview", "orders", "products", "customers", "analytics"];
-useEffect(() => {
+  useEffect(() => {
+  const validTabs = ["overview", "orders", "products", "customers", "analytics"];
   if (!router.isReady) return; // wait until query is ready
 
   const currentTab = router.query?.tab;
@@ -52,7 +52,7 @@ useEffect(() => {
       { shallow: true }
     );
   }
-}, [router, router.isReady, router.query, validTabs]);
+}, [router, router.isReady, router.query]);
 
   const [orders, setOrders] = useState([]);
   const [filters, setFilters] = useState({

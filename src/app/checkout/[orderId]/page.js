@@ -17,6 +17,7 @@ import Button from "@/components/Button";
 import PaymentForm from "./paymentForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { ResourceNotFound } from "@/components/ResourceNotFound";
+import Image from "next/image";
 
 export default function Checkout() {
   const { orderId } = useParams();
@@ -38,7 +39,7 @@ export default function Checkout() {
     ) {
       toast.error("Payment failed. Please retry.");
     } // else remain on the page to complete checkout
-  }, [orderId]);
+  }, [orderId, order, router]);
 
   const [updateShippingInfo] = useUpdateShippingInfoMutation();
   const [updatePaymentInfo] = useUpdatePaymentInfoMutation();
@@ -875,7 +876,7 @@ export default function Checkout() {
                     <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
                       {/* <CreditCard className="w-6 h-6 text-gray-400" /> */}
                       {item?.image ? (
-                        <img
+                        <Image
                           src={item.image}
                           alt={item.name}
                           className="w-16 h-16 rounded-lg object-cover"

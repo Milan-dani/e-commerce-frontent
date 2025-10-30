@@ -28,6 +28,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import { ResourceNotFound } from "@/components/ResourceNotFound";
 import { EmptyState } from "@/components/EmptyState";
 import CartItemSkeleton from "@/components/SkeletonLoaders";
+import Image from "next/image";
 
 const CartItem = ({
   item,
@@ -49,7 +50,7 @@ const CartItem = ({
   };
   useEffect(() => {
     if (product) onProductLoaded(item.productId, product);
-  }, [product]);
+  }, [product, item.productId, onProductLoaded]);
 
   if (isLoading || !product) {
     return (
@@ -68,7 +69,7 @@ const CartItem = ({
     >
       {/* Image */}
       {product?.image ? (
-        <img
+        <Image
           src={product.image}
           alt={product.name}
           className="w-24 h-24 sm:w-20 sm:h-20 object-cover rounded-lg mx-auto sm:mx-0"
