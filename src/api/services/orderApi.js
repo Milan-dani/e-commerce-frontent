@@ -36,12 +36,12 @@ export const ordersApi = baseApi.injectEndpoints({
       providesTags: (result, error, id) => [{ type: "Orders", id }],
     }),
     downloadInvoice: builder.query({
-  query: (orderId) => ({
-    url: `/orders/${orderId}/invoice`,
-    method: "GET",
-    responseHandler: (response) => response.blob(), // 👈 parse as blob instead of JSON
-  }),
-}),
+      query: (orderId) => ({
+        url: `/orders/${orderId}/invoice`,
+        method: "GET",
+        responseHandler: (response) => response.blob(), // 👈 parse as blob instead of JSON
+      }),
+    }),
     getOrderAdmin: builder.query({
       query: (orderId) => `/orders/admin/${orderId}`,
       providesTags: (result, error, id) => [{ type: "Orders", id }],

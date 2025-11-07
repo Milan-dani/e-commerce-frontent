@@ -20,14 +20,20 @@ import {
   ShoppingCart,
   Phone,
   CheckCircle,
+  DollarSign,
 } from "lucide-react";
 import Button from "@/components/Button";
 import OrderHistoryTable from "@/components/dashboardComponents/user/OrderHistoryTable";
 import { useListOrdersQuery } from "@/api/services/orderApi";
 import { getStatusColor } from "@/utils/statusHelpers";
 import Cookies from "js-cookie";
+import { useGetUserAnalyticsQuery } from "@/api/services/analyticsApi";
+import StatCard from "@/components/dashboardComponents/admin/analytics/StatCard";
 
 export default function Dashboard() {
+  // overview analytics fetching
+  const { data: userAnalyticsData } = useGetUserAnalyticsQuery();
+
   // Orders Fetching
   const [orders, setOrders] = useState([]);
   const [filters, setFilters] = useState({
@@ -74,11 +80,11 @@ export default function Dashboard() {
     totalSpent: 1250.5,
   };
 
-
-  const userFromCookies = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
+  const userFromCookies = Cookies.get("user")
+    ? JSON.parse(Cookies.get("user"))
+    : null;
   const user = userFromCookies || { ...defaultUser };
   console.log(user);
-  
 
   const recentOrders = [
     {
@@ -183,14 +189,17 @@ export default function Dashboard() {
                       .split(" ")
                       .map((n) => n[0])
                       .join("")} */}
-                      {/* {user.firstName[0].toUpperCase()}{user.lastName[0].toUpperCase()} */}
-                      {`${user?.firstName?.[0]?.toUpperCase() ?? ""}${user?.lastName?.[0]?.toUpperCase() ?? ""}`}
-
+                    {/* {user.firstName[0].toUpperCase()}{user.lastName[0].toUpperCase()} */}
+                    {`${user?.firstName?.[0]?.toUpperCase() ?? ""}${
+                      user?.lastName?.[0]?.toUpperCase() ?? ""
+                    }`}
                   </span>
                 </div>
                 <div>
                   {/* <h3 className="font-semibold text-gray-900">{user.name}</h3> */}
-                  <h3 className="font-semibold text-gray-900">{user.firstName}{" "}{user.lastName}</h3>
+                  <h3 className="font-semibold text-gray-900">
+                    {user.firstName} {user.lastName}
+                  </h3>
                   {/* <p className="text-sm text-gray-600">{user.email}</p> */}
                   <p className="text-sm text-gray-600">{user.email}</p>
                 </div>
@@ -232,7 +241,25 @@ export default function Dashboard() {
               >
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
+                  <StatCard
+                    title={"Total Orders"}
+                    value={userAnalyticsData?.totalOrders || 0}
+                    icon={Package}
+                    color={"text-blue-600"}
+                  />
+                  <StatCard
+                    title={"Total Spent"}
+                    value={userAnalyticsData?.totalPaidAmount || 0}
+                    icon={CreditCard}
+                    color={"text-green-600"}
+                  />
+                  <StatCard
+                    title={"Average Order Value"}
+                    value={userAnalyticsData?.averageOrderValue || 0}
+                    icon={DollarSign}
+                    color={"text-indigo-600"}
+                  />
+                  <div className="bg-white p-6 rounded-lg shadow-sm hidden">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-gray-600">
@@ -247,7 +274,7 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
+                  <div className="bg-white p-6 rounded-lg shadow-sm hidden">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-gray-600">
@@ -261,7 +288,7 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
+                  <div className="bg-white p-6 rounded-lg shadow-sm hidden">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-gray-600">
@@ -373,7 +400,8 @@ export default function Dashboard() {
                                 {order.orderNumber}
                               </h3>
                               <p className="text-sm text-gray-600">
-                                {order?.createdAt?.split("T")?.[0] ?? "Unknown date"}
+                                {order?.createdAt?.split("T")?.[0] ??
+                                  "Unknown date"}
                               </p>
                             </div>
                           </div>
@@ -395,7 +423,7 @@ export default function Dashboard() {
                                 order.status
                               )}`}
                             >
-                             {order.status}
+                              {order.status}
                             </span>
                             {/* <span
                               className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -428,7 +456,8 @@ export default function Dashboard() {
                                 {order.orderNumber}
                               </h3>
                               <p className="text-sm text-gray-600">
-                                {order?.createdAt?.split("T")?.[0] ?? "Unknown date"}
+                                {order?.createdAt?.split("T")?.[0] ??
+                                  "Unknown date"}
                               </p>
                             </div>
                           </div>
@@ -446,7 +475,9 @@ export default function Dashboard() {
                           {/* Right: Status + Action */}
                           <div className="flex items-center gap-2">
                             <span
-                              className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                                order.status
+                              )}`}
                             >
                               {order.status}
                             </span>
@@ -477,7 +508,13 @@ export default function Dashboard() {
                     Order History
                   </h2>
                   <OrderHistoryTable
-                    {...{ totalOrders, totalPages, orders, filters, updateFilter }}
+                    {...{
+                      totalOrders,
+                      totalPages,
+                      orders,
+                      filters,
+                      updateFilter,
+                    }}
                   />
                   <div className="overflow-x-auto hidden">
                     <table className="w-full">

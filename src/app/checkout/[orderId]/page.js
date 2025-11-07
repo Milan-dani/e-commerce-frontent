@@ -244,7 +244,7 @@ export default function Checkout() {
   //   // Handle order submission
   //   console.log('Order submitted:', formData);
   // };
-  const handlePlaceOrder = async () => {
+  const handlePlaceOrder_OLD = async () => {
     const order = await placeOrder(orderId).unwrap();
     console.log(order);
 
@@ -260,6 +260,115 @@ export default function Checkout() {
       }
     } else {
       toast.error(order?.message || "Payment failed");
+    }
+  };
+  const handlePlaceOrder = async () => {
+    try {
+      // Call RTK Query mutation normally (no .unwrap())
+      const result = await placeOrder(orderId);
+      console.log("Place order result:", result);
+      // RTK Query mutation responses look like:
+      // { data: {...} } on success
+      // { error: {...} } on failure
+
+      if (result.error) {
+        // console.error("Order error:", result.error);
+        console.log("Order error:", result.error);
+
+        // Safely extract message from backend response
+        const message =
+          result.error.data?.message ||
+          result.error.message ||
+          "Payment failed. Please try again.";
+
+        // toast.error(message);
+        toast.error(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? "animate-enter" : "animate-leave"
+              } flex items-center`}
+            >
+              <span>{message}</span>
+              <Button onClick={() => toast.dismiss(t.id)} className="ml-4">
+                Dismiss
+              </Button>
+            </div>
+          ),
+          { duration: Infinity }
+        );
+        return; // stop here
+      }
+
+      // Extract the actual order data
+      const order = result.data;
+      console.log("Order result:", order);
+
+      // Handle success/failure inside the order data
+      if (order.success === true) {
+        if (order.order.status === "paid") {
+          toast.success("Order placed successfully!");
+          router.push(`/orders/${orderId}`);
+        } else if (
+          order.order.status === "pending" &&
+          order.order.paymentInfo?.status === "failed"
+        ) {
+          // toast.error("Payment failed. Please retry.");
+          toast.error(
+            (t) => (
+              <div
+                className={`${
+                  t.visible ? "animate-enter" : "animate-leave"
+                } flex items-center`}
+              >
+                <span>Payment failed. Please retry.</span>
+                <Button onClick={() => toast.dismiss(t.id)} className="ml-4">
+                  Dismiss
+                </Button>
+              </div>
+            ),
+            { duration: Infinity }
+          );
+        } else {
+          toast.info("Order is being processed...");
+        }
+      } else {
+        // toast.error(order?.message || "Payment failed");
+        toast.error(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? "animate-enter" : "animate-leave"
+              } flex items-center`}
+            >
+              <span>{`${order?.message || "Payment failed"}`}</span>
+              <Button onClick={() => toast.dismiss(t.id)} className="ml-4">
+                Dismiss
+              </Button>
+            </div>
+          ),
+          { duration: Infinity }
+        );
+      }
+    } catch (err) {
+      // Catch any unexpected runtime issues
+      console.log("Unexpected error:", err);
+      // toast.error("Something went wrong. Please try again later.");
+      toast.error(
+        (t) => (
+          <div
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } flex items-center`}
+          >
+            <span>Something went wrong. Please try again later.</span>
+            <Button onClick={() => toast.dismiss(t.id)} className="ml-4">
+              Dismiss
+            </Button>
+          </div>
+        ),
+        { duration: Infinity }
+      );
     }
   };
 

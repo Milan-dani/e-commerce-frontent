@@ -1,71 +1,87 @@
-// src/store/apis/analyticsApi.js
-import baseApi from "@/store/apis/baseApi"; // adjust path if needed
+import baseApi from "../baseApi";
 
 export const analyticsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getOrdersAnalytics: builder.query({
-      query: () => "/analytics/orders",
-      providesTags: [{ type: "Analytics", id: "ORDERS" }],
+    // --- Dashboard Overview ---
+    getOverview: builder.query({
+      query: () => `/analytics/overview`,
+      providesTags: ["Overview"],
     }),
-    getRevenueAnalytics: builder.query({
-      query: () => "/analytics/revenue",
-      providesTags: [{ type: "Analytics", id: "REVENUE" }],
-    }),
-    getUsersAnalytics: builder.query({
-      query: () => "/analytics/users",
-      providesTags: [{ type: "Analytics", id: "USERS" }],
-    }),
-    getFunnel: builder.query({
-      query: () => "/analytics/funnel",
-      providesTags: [{ type: "Analytics", id: "FUNNEL" }],
-    }),
+
+    // --- Summary Cards ---
     getSummary: builder.query({
-      query: () => "/summary",
-      providesTags: [{ type: "Analytics", id: "SUMMARY" }],
+      query: ({ from, to }) => `/analytics/summary?from=${from}&to=${to}`,
+      providesTags: ["Analytics"],
     }),
-    getTrends: builder.query({
-      query: () => "/trends",
-      providesTags: [{ type: "Analytics", id: "TRENDS" }],
+
+    // --- Conversion Funnel ---
+    getConversion: builder.query({
+      query: ({ from, to }) => `/analytics/conversion?from=${from}&to=${to}`,
+      providesTags: ["Conversion"],
     }),
+
+    // --- Product Analytics ---
+    getProducts: builder.query({
+      query: ({ from, to }) => `/analytics/products?from=${from}&to=${to}`,
+      providesTags: ["Products"],
+    }),
+
+    // --- Customer Analytics ---
+    getCustomers: builder.query({
+      query: ({ from, to }) => `/analytics/customers?from=${from}&to=${to}`,
+      providesTags: ["Customers"],
+    }),
+
+    // --- Orders Analytics ---
+    getOrders: builder.query({
+      query: ({ from, to }) => `/analytics/orders?from=${from}&to=${to}`,
+      providesTags: ["Orders"],
+    }),
+
+    // --- Timeline Data ---
+    getTimeline: builder.query({
+      query: ({ from, to }) => `/analytics/timeline?from=${from}&to=${to}`,
+      providesTags: ["Analytics"],
+    }),
+
+    // --- User-Specific Analytics ---
+    // getUserAnalytics: builder.query({
+    //   query: ({ userId }) => `/analytics/user/${userId}`,
+    //   providesTags: ["Analytics"],
+    // }),
+      getUserAnalytics: builder.query({
+      query: () => `/analytics/user/`,
+      providesTags: ["Analytics"],
+    }),
+
+    // --- Events ---
     getEvents: builder.query({
-      query: ({ event, from, to, userId, limit = 100 } = {}) => {
-        const params = new URLSearchParams();
-        if (event) params.set("event", event);
-        if (from) params.set("from", from);
-        if (to) params.set("to", to);
-        if (userId) params.set("userId", userId);
-        params.set("limit", limit);
-        return `/events?${params.toString()}`;
-      },
-      providesTags: [{ type: "Analytics", id: "EVENTS" }],
+      query: ({ from, to, page = 1, limit = 10 }) =>
+        `/analytics/events?from=${from}&to=${to}&page=${page}&limit=${limit}`,
+      providesTags: ["Events"],
+    }),
+
+    // --- Log New Event (for debug/testing) ---
+    createEvent: builder.mutation({
+      query: (body) => ({
+        url: `/analytics/events`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Events"],
     }),
   }),
-  overrideExisting: false,
 });
 
 export const {
-  useGetOrdersAnalyticsQuery,
-  useGetRevenueAnalyticsQuery,
-  useGetUsersAnalyticsQuery,
-  useGetFunnelQuery,
+  useGetOverviewQuery,
   useGetSummaryQuery,
-  useGetTrendsQuery,
+  useGetConversionQuery,
+  useGetProductsQuery,
+  useGetCustomersQuery,
+  useGetOrdersQuery,
+  useGetTimelineQuery,
+  useGetUserAnalyticsQuery,
   useGetEventsQuery,
+  useCreateEventMutation,
 } = analyticsApi;
-
-
-
-// ///////////////////////////////
-// import { baseApi } from "@/store/api/baseApi";
-
-// export const analyticsApi = baseApi.injectEndpoints({
-//   endpoints: (builder) => ({
-//     getAnalytics: builder.query({
-//       query: ({ startDate, endDate, eventType }) =>
-//         `/analytics?startDate=${startDate}&endDate=${endDate}&type=${eventType || ""}`,
-//       providesTags: ["Analytics"],
-//     }),
-//   }),
-// });
-
-// export const { useGetAnalyticsQuery } = analyticsApi;

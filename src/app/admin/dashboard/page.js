@@ -31,28 +31,37 @@ import {
 import OrderHistoryTable from "@/components/dashboardComponents/admin/OrderHistoryTable";
 import { getStatusColor } from "@/utils/statusHelpers";
 import { useParams, useRouter } from "next/navigation";
+import StatCard from "@/components/dashboardComponents/admin/analytics/StatCard";
+import { useGetOverviewQuery } from "@/api/services/analyticsApi";
 
 export default function AdminDashboard() {
   // const { tab } = useParams();
-  const router = useRouter();  
+  const router = useRouter();
   // const { tab } = router.query; // get query param
   const [activeTab, setActiveTab] = useState("overview");
   useEffect(() => {
-  const validTabs = ["overview", "orders", "products", "customers", "analytics"];
-  if (!router.isReady) return; // wait until query is ready
+    const validTabs = [
+      "overview",
+      "orders",
+      "products",
+      "customers",
+      "analytics",
+    ];
+    if (!router.isReady) return; // wait until query is ready
 
-  const currentTab = router.query?.tab;
-  if (currentTab && validTabs.includes(currentTab)) {
-    setActiveTab(currentTab);
-  } else {
-    setActiveTab("overview");
-    router.replace(
-      { query: { tab: "overview" } },
-      undefined,
-      { shallow: true }
-    );
-  }
-}, [router, router.isReady, router.query]);
+    const currentTab = router.query?.tab;
+    if (currentTab && validTabs.includes(currentTab)) {
+      setActiveTab(currentTab);
+    } else {
+      setActiveTab("overview");
+      router.replace({ query: { tab: "overview" } }, undefined, {
+        shallow: true,
+      });
+    }
+  }, [router, router.isReady, router.query]);
+
+  // fetching overview from analytics
+  const { data: overviewData } = useGetOverviewQuery();
 
   const [orders, setOrders] = useState([]);
   const [filters, setFilters] = useState({
@@ -85,7 +94,6 @@ export default function AdminDashboard() {
       page: key === "page" ? value : 1, // reset page on any filter change except page
     }));
   };
-
 
   const stats = {
     totalRevenue: 125430.5,
@@ -319,7 +327,41 @@ export default function AdminDashboard() {
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* lg:grid-cols-4 ^ removed from above*/}
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
+                  <StatCard
+                    title={"Total Revenue"}
+                    value={`$ ${overviewData?.revenue || 0}`}
+                    icon={DollarSign}
+                    color={"text-green-600"}
+                  />
+                  {/* <StatCard
+                    title={"Total Revenue"}
+                    value={overviewData?.revenue || 0}
+                    icon={DollarSign}
+                    color={"text-green-600"}
+                    sub={10}
+                    positive
+                  /> */}
+                    <StatCard
+                      title={"Total Orders"}
+                      value={`${overviewData?.orders?.created || 0}`}
+                      icon={ShoppingCart}
+                      color={"text-blue-600"}
+                    />
+                  <StatCard
+                    title={"Total Customers"}
+                    value={`${overviewData?.users?.new || 0}`}
+                    icon={Users}
+                    color={"text-purple-600"}
+            
+                  />
+                  <StatCard
+                    title={"Total Products"}
+                    value={`$ ${overviewData?.products?.created || 0}`}
+                    icon={Package}
+                    color={"text-orange-600"}
+
+                  />
+                  {/* <div className="bg-white p-6 rounded-lg shadow-sm">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-gray-600">
@@ -336,7 +378,6 @@ export default function AdminDashboard() {
                       <DollarSign className="w-8 h-8 text-green-600" />
                     </div>
                   </div>
-
                   <div className="bg-white p-6 rounded-lg shadow-sm">
                     <div className="flex items-center justify-between">
                       <div>
@@ -354,7 +395,6 @@ export default function AdminDashboard() {
                       <ShoppingCart className="w-8 h-8 text-blue-600" />
                     </div>
                   </div>
-
                   <div className="bg-white p-6 rounded-lg shadow-sm">
                     <div className="flex items-center justify-between">
                       <div>
@@ -372,7 +412,6 @@ export default function AdminDashboard() {
                       <Users className="w-8 h-8 text-purple-600" />
                     </div>
                   </div>
-
                   <div className="bg-white p-6 rounded-lg shadow-sm">
                     <div className="flex items-center justify-between">
                       <div>
@@ -389,7 +428,7 @@ export default function AdminDashboard() {
                       </div>
                       <Package className="w-8 h-8 text-orange-600" />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Charts Placeholder */}
